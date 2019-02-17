@@ -56,10 +56,11 @@ function ViewModel() {
     // Animate the marker in-action and update the info view to points to the marker on the map
     this.animateAndUpdateInfoView = function () {
         self.updateInfoWindow(this, self.infoWindow);
-        this.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout((function () {
             this.setAnimation(null);
         }).bind(this), 900);
+
+        this.setAnimation(google.maps.Animation.BOUNCE);
     };
 
     this.initMap = function () {
@@ -94,7 +95,6 @@ function ViewModel() {
                 lat: this.markerLat,
                 lng: this.markerLng,
                 id: i,
-                animation: google.maps.Animation.DROP,
                 category: places[i].category,
                 iconName: places[i].icon
             });
@@ -104,7 +104,7 @@ function ViewModel() {
             bounds.extend(this.marker.position);
         }
         map.fitBounds(bounds);
-
+        // map.setCenter(bounds.getCenter());
     };
 
     this.initMap();
@@ -123,15 +123,19 @@ function ViewModel() {
                 this.markers[i].setVisible(false);
             }
         }
+
         return result;
     }, this);
+
+    this.closeNavbar = function() {
+        document.getElementById("drawer").classList.remove("is-visible");
+    }
 }
 
-mapsErrorHandler = function googleError() {
+function gm_authFailure() {
     alert(
         'An Error occurred while loading the map. Please refresh the page and try again!'
-    );
-};
+    );};
 
 function applyViewModelBinding() {
     let viewModel = new ViewModel();

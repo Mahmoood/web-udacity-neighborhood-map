@@ -70,4 +70,59 @@ let places = [
         lng: 28.9729067,
         icon: 'restaurant.png'
     }
+
+
+
+    ,
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    },
+    {
+        title: 'Old Ottoman Cafe & Restaurant',
+        category: 'Restaurant',
+        lat: 41.0120533,
+        lng: 28.9729067,
+        icon: 'restaurant.png'
+    }
+
+
 ];
