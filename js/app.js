@@ -1,75 +1,139 @@
-const initialCats = [
-    {
-        clickCount: 0,
-        name: "Tabby",
-        imgSrc: "img/434164568_fea0ad4013_z.jpg",
-        imgAttribution: '',
-        nickNames: ['Tab-Tab', 'T-Bone', 'Mr. T']
-    },
-    {
-        clickCount: 0,
-        name: "Tiger",
-        imgSrc: "img/4154543904_6e2428c421_z.jpg",
-        imgAttribution: '',
-        nickNames: ['Tigger']
-    },
-    {
-        clickCount: 0,
-        name: "Scaredy",
-        imgSrc: "img/22252709_010df3379e_z.jpg",
-        imgAttribution: '',
-        nickNames: ['Casper', 'Cassy', 'Mr. C']
-    },
-    {
-        clickCount: 0,
-        name: "Shadow",
-        imgSrc: "img/1413379559_412a540d29_z.jpg",
-        imgAttribution: '',
-        nickNames: ['Shooby', 'T-Bone', 'Mr. Sh']
-    },
-    {
-        clickCount: 0,
-        name: "Sleepy",
-        imgSrc: "img/9648464288_2516b35537_z.jpg",
-        imgAttribution: '',
-        nickNames: ['ZZZZ']
-    }
-];
+let map, foursquareClientID, foursquareClientSecret;
+foursquareClientID = "2G4BOAVMDDTBVKZOU0WI0IBXSQOCMDTIOWZCKXS4XO1RAC0R";
+foursquareClientSecret = "3UZMRJ1XEB1WDHZROFUCCIGDJCFMWPVRG5J4FFDWVDNHEV4K";
 
-var Cat = function(data) {
-    "use strict";
-    this.clickCount = ko.observable(data.clickCount);
-    this.name = ko.observable(data.name);
-    this.imgSrc = ko.observable(data.imgSrc);
-    this.imgAttribution = ko.observable(data.imgAttribution);
-    this.nickNames = ko.observableArray(data.nickNames);
-    this.catLevel = ko.computed( function() {
-        let title, numClicks;
-        numClicks = this.clickCount();
-        if (numClicks < 10) { title = 'NewBorn'; }
-        else if (numClicks < 15) { title = 'Infant'; }
-        else if (numClicks < 20) { title = 'Child'; }
-        else if (numClicks < 25) { title = 'Adult'; }
-        else { title = 'Ninja'; }
-        return title;
+function ViewModel() {
+    let self = this;
+
+    this.searchOption = ko.observable("");
+    this.markers = [];
+
+    // Update the info window to show related info of the passed 'marker'
+    this.updateInfoWindow = function (marker, infoWindow) {
+        if (infoWindow.marker === marker) {
+            return;
+        }
+
+        infoWindow.marker = marker;
+
+        const apiUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
+            marker.lat + ',' + marker.lng + '&client_id=' + foursquareClientID +
+            '&client_secret=' + foursquareClientSecret + '&query=' + marker.title +
+            '&v=20170708' + '&m=foursquare';
+
+        let basicContent = `<div>
+                                <h4 class="iw_title">${marker.title}</h4>
+                            </div>
+                            <span><img class="place-icon" src="img/${marker.iconName}"/></span>
+                            <span class="info-window-category">${marker.category}</span>`;
+        infoWindow.setContent(basicContent);
+
+        $.getJSON(apiUrl)
+            .done(function (json) {
+                const venue = json.response.venues[0];
+                let formattedAddress = venue.location['formattedAddress'].join(', ');
+
+                self.address =
+                    `<div>
+                    <h6 class="iw_address_title"> Address: </h6>
+                    <p class="iw_address">${formattedAddress}</p>
+                </div>`;
+
+                infoWindow.setContent(basicContent + self.address);
+            }).fail(function () {
+            // Send alert
+            alert(
+                "There was an issue loading the Foursquare API. Please refresh your page to try again."
+            );
+        });
+
+        infoWindow.open(map, marker);
+        infoWindow.addListener('closeclick', function () {
+            infoWindow.marker = null;
+        });
+    };
+
+    // Animate the marker in-action and update the info view to points to the marker on the map
+    this.animateAndUpdateInfoView = function () {
+        self.updateInfoWindow(this, self.infoWindow);
+        this.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout((function () {
+            this.setAnimation(null);
+        }).bind(this), 900);
+    };
+
+    this.initMap = function () {
+        const mapElement = document.getElementById('map');
+        var mapOptions = {
+            center: {lat: 41.0098674, lng: 28.9649889},
+            zoom: 10
+        };
+
+        // Initialize the map object
+        map = new google.maps.Map(mapElement, mapOptions);
+
+        const bounds = new google.maps.LatLngBounds();
+
+        // Set InfoWindow
+        this.infoWindow = new google.maps.InfoWindow({
+            maxWidth: 200,
+        });
+        for (let i = 0; i < places.length; i++) {
+            this.markerTitle = places[i].title;
+            this.markerLat = places[i].lat;
+            this.markerLng = places[i].lng;
+
+            // Google Maps marker setup
+            this.marker = new google.maps.Marker({
+                map: map,
+                position: {
+                    lat: this.markerLat,
+                    lng: this.markerLng
+                },
+                title: this.markerTitle,
+                lat: this.markerLat,
+                lng: this.markerLng,
+                id: i,
+                animation: google.maps.Animation.DROP,
+                category: places[i].category,
+                iconName: places[i].icon
+            });
+            this.marker.setMap(map);
+            this.markers.push(this.marker);
+            this.marker.addListener('click', self.animateAndUpdateInfoView);
+            bounds.extend(this.marker.position);
+        }
+        map.fitBounds(bounds);
+
+    };
+
+    this.initMap();
+
+    // This block appends our locations to a list using data-bind
+    // It also serves to make the filter work
+    this.placesFilter = ko.computed(function () {
+        var result = [];
+        for (var i = 0; i < this.markers.length; i++) {
+            var marker = this.markers[i];
+            if (marker.title.toLowerCase().includes(this.searchOption()
+                .toLowerCase())) {
+                result.push(marker);
+                this.markers[i].setVisible(true);
+            } else {
+                this.markers[i].setVisible(false);
+            }
+        }
+        return result;
     }, this);
 }
-var ViewModel = function () {
-    "use strict";
-    let self = this;
-    this.catList = ko.observableArray([]);
-    initialCats.forEach(function(catObj) {
-        self.catList.push(new Cat(catObj));
-    });
-    this.currentCat = ko.observable( this.catList()[0] );
-    this.incrementCounter = function () {
-        // this.clickCount( this.clickCount() + 1 );
-        self.currentCat().clickCount(self.currentCat().clickCount() + 1);
-    };
-    this.setCat = function ( selectedCat ) {
-        // console.log(selectedCat);
-        self.currentCat(selectedCat);
-    };
+
+mapsErrorHandler = function googleError() {
+    alert(
+        'An Error occurred while loading the map. Please refresh the page and try again!'
+    );
 };
 
-ko.applyBindings(new ViewModel());
+function applyViewModelBinding() {
+    let viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
+}
