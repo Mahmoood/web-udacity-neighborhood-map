@@ -163,3 +163,27 @@
 .nav-item:hover {
     background-color: #f3f3f3;
 }
+
+
+.place-details {
+    width: 0;
+    height: calc(100vh - 80px);
+    display: flex;
+    z-index: 1;
+    transition: 0.01s;
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+
+}
+
+.place-image {
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 14px;
+
+}

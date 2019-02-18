@@ -16,7 +16,7 @@ function ViewModel() {
 
         infoWindow.marker = marker;
 
-        const apiUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
+        const foursquareSearchUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
             marker.lat + ',' + marker.lng + '&client_id=' + foursquareClientID +
             '&client_secret=' + foursquareClientSecret + '&query=' + marker.title +
             '&v=20170708' + '&m=foursquare';
@@ -28,7 +28,7 @@ function ViewModel() {
                             <span class="info-window-category">${marker.category}</span>`;
         infoWindow.setContent(basicContent);
 
-        $.getJSON(apiUrl)
+        $.getJSON(foursquareSearchUrl)
             .done(function (json) {
                 const venue = json.response.venues[0];
                 let formattedAddress = venue.location['formattedAddress'].join(', ');
@@ -61,6 +61,8 @@ function ViewModel() {
         }).bind(this), 900);
 
         this.setAnimation(google.maps.Animation.BOUNCE);
+
+        self.showPlaceDetails(this.position);
     };
 
     this.initMap = function () {
@@ -112,6 +114,9 @@ function ViewModel() {
     // This block appends our locations to a list using data-bind
     // It also serves to make the filter work
     this.placesFilter = ko.computed(function () {
+        if (this.hidePlaceDetails) {
+            this.hidePlaceDetails();
+        }
         var result = [];
         for (var i = 0; i < this.markers.length; i++) {
             var marker = this.markers[i];
@@ -127,7 +132,52 @@ function ViewModel() {
         return result;
     }, this);
 
+    this.showPlaceDetails = function(position) {
+        document.getElementsByClassName("place-details")[0].style.width = "100%";
+        $(".place-details").empty()
+
+        // Render place details
+        var flickerSearchUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
+            "&api_key=5741c0a256b01cd7236a25481d83c403&lat=" + position.lat() +
+            "&lon=" + position.lng() + "&radius=0.01&radius_units=km&format=json&nojsoncallback=1";
+
+        console.log(position.lat() + "," + position.lng());
+
+        $.getJSON(flickerSearchUrl)
+            .done(function (json) {
+                if (json.total < 1) {
+                    h2.innerHTML += 'No Image from Flickr<br>We hope to fix this in the future';
+                    target.appendChild(h2);
+                    console.log('no photo')
+                }
+
+                json.photos.photo.slice(0, 10).forEach(({farm, server, id, secret}) => {
+                    var url = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
+                    let name = `<img class="place-image" src=${url}>`;
+                    $(".place-details").append(name);      // Append the new elements
+                //
+
+                        console.log(url);
+                });
+
+            }).fail(function () {
+            // Send alert
+            alert(
+                "There was an issue loading the Flicker API. Please refresh your page to try again."
+            );
+        });
+    }
+
+    this.hidePlaceDetails = function() {
+        document.getElementsByClassName("place-details")[0].style.width = "0px";
+    };
+
     this.closeNavbar = function() {
+        if ($(".place-details")[0].offsetWidth > 0) {
+            self.hidePlaceDetails();
+            return
+        }
+
         document.getElementById("drawer").classList.remove("is-visible");
     }
 }

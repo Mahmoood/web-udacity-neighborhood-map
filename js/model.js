@@ -7,6 +7,13 @@ let places = [
         icon: 'history.png'
     },
     {
+        title: 'Zeyrek Mosque',
+        category: 'Historical Place',
+        lat: 41.015925,
+        lng: 28.956557,
+        icon: 'history.png'
+    },
+    {
         title: 'Byzantine Wall',
         category: 'Historical Place',
         lat: 41.0144956,
@@ -116,13 +123,7 @@ let places = [
         lng: 28.9729067,
         icon: 'restaurant.png'
     },
-    {
-        title: 'Old Ottoman Cafe & Restaurant',
-        category: 'Restaurant',
-        lat: 41.0120533,
-        lng: 28.9729067,
-        icon: 'restaurant.png'
-    }
+
 
 
 ];
