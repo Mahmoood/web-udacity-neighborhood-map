@@ -134,37 +134,42 @@ function ViewModel() {
 
     this.showPlaceDetails = function(position) {
         document.getElementsByClassName("place-details")[0].style.width = "100%";
+        $(".close-nav")[0].className = "close-nav fas fa-times";
         $(".place-details").empty()
 
         // Render place details
         var flickerSearchUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
-            "&api_key=5741c0a256b01cd7236a25481d83c403&lat=" + position.lat() +
+            "&api_key=2d635d6b6ee6f903b87e445d9e7f7814&lat=" + position.lat() +
             "&lon=" + position.lng() + "&radius=0.01&radius_units=km&format=json&nojsoncallback=1";
 
         console.log(position.lat() + "," + position.lng());
 
         $.getJSON(flickerSearchUrl)
             .done(function (json) {
-                if (json.total < 1) {
-                    h2.innerHTML += 'No Image from Flickr<br>We hope to fix this in the future';
-                    target.appendChild(h2);
-                    console.log('no photo')
+
+                if (!json || json.stat !== "ok") {
+                    let errorElement = `<p class="flicker-image-search-error"> An error occurred while getting images from Flicker!</p>`;
+                    $(".place-details").append(errorElement);
+                    return
+                }
+
+                if (json.photos.total < 1) {
+                    let errorElement = `<p class="flicker-no-images"> Can not find any image on Flicker related to this place!</p>`;
+                    $(".place-details").append(errorElement);
+                    return
                 }
 
                 json.photos.photo.slice(0, 10).forEach(({farm, server, id, secret}) => {
                     var url = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
-                    let name = `<img class="place-image" src=${url}>`;
-                    $(".place-details").append(name);      // Append the new elements
-                //
-
-                        console.log(url);
+                    let flickerImageElement = `<img class="place-image" src=${url}>`;
+                    $(".place-details").append(flickerImageElement);      // Append the new elements
+                    console.log(url);
                 });
 
             }).fail(function () {
-            // Send alert
-            alert(
-                "There was an issue loading the Flicker API. Please refresh your page to try again."
-            );
+                // Send alert
+                let errorElement = `<p class="flicker-image-search-error"> An error occurred while getting images from Flicker! Try again later.</p>`;
+                $(".place-details").append(errorElement);
         });
     }
 
@@ -175,6 +180,7 @@ function ViewModel() {
     this.closeNavbar = function() {
         if ($(".place-details")[0].offsetWidth > 0) {
             self.hidePlaceDetails();
+            $(".close-nav")[0].className = "close-nav fas fa-chevron-left";
             return
         }
 

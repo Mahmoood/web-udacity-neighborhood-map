@@ -187,3 +187,12 @@
     border-radius: 14px;
 
 }
+
+.flicker-image-search-error, .flicker-no-images{
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 17px;
+    text-align: center;
+    color: gray;
+    border-bottom: 1px solid #80808033;
+}
