@@ -8,6 +8,10 @@ function ViewModel() {
     this.searchOption = ko.observable("");
     this.markers = [];
 
+    this.favoriteClicked = function(placeId) {
+        console.log(placeId);
+    };
+
     // Update the info window to show related info of the passed 'marker'
     this.updateInfoWindow = function (marker, infoWindow) {
         if (infoWindow.marker === marker) {
@@ -25,7 +29,20 @@ function ViewModel() {
                                 <h4 class="iw_title">${marker.title}</h4>
                             </div>
                             <span><img class="place-icon" src="img/${marker.iconName}"/></span>
-                            <span class="info-window-category">${marker.category}</span>`;
+                            <span class="info-window-category">${marker.category}</span>
+                            `;
+
+        let placeId = `${marker.position.lat()}, ${marker.position.lng()}`
+        const placeLiked = localStorage.getItem(placeId) === "true";
+        let self = this;
+        if (placeLiked) {
+            basicContent += `<i id="favorite" class="fas fa-heart like liked"
+                   data-place-id="${placeId}"></i>`
+        } else {
+            basicContent += `<i id="favorite" class="fas fa-heart like like-disabled"
+                   data-place-id="${placeId}"></i>`
+        }
+
         infoWindow.setContent(basicContent);
 
         $.getJSON(foursquareSearchUrl)
@@ -40,6 +57,18 @@ function ViewModel() {
                 </div>`;
 
                 infoWindow.setContent(basicContent + self.address);
+
+                $("#favorite").click(function() {
+                    console.log(placeId);
+                    if (localStorage.getItem(placeId) === "true") {
+                        localStorage.removeItem(placeId);
+                        $('#favorite').removeClass('liked').addClass('like-disabled');
+                    } else {
+                        localStorage.setItem(placeId, true);
+                        $('#favorite').removeClass('like-disabled').addClass('liked');
+                    }
+                });
+
             }).fail(function () {
             // Send alert
             alert(
@@ -139,15 +168,15 @@ function ViewModel() {
 
         // Render place details
         var flickerSearchUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
-            "&api_key=2d635d6b6ee6f903b87e445d9e7f7814&lat=" + position.lat() +
-            "&lon=" + position.lng() + "&radius=0.01&radius_units=km&format=json&nojsoncallback=1";
+            "&api_key=f018661ad69c5d52b0f39f7b39da03bf&lat=" + position.lat() +
+            "&lon=" + position.lng() + "&radius=0.1&radius_units=km&format=json&nojsoncallback=1";
 
         console.log(position.lat() + "," + position.lng());
 
         $.getJSON(flickerSearchUrl)
             .done(function (json) {
 
-                if (!json || json.stat !== "ok") {
+                if (json !== null || json.stat !== "ok") {
                     let errorElement = `<p class="flicker-image-search-error"> An error occurred while getting images from Flicker!</p>`;
                     $(".place-details").append(errorElement);
                     return

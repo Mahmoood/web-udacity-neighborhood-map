@@ -26,6 +26,9 @@
 
 .iw_title {
     font-size: 1.3em;
+    line-height: 1.5em;
+    margin-top: 4px;
+    margin-bottom: 10px;
 }
 
 .info-window-category {
@@ -38,6 +41,7 @@
 .iw_address_title {
     margin-bottom: 2px;
     font-size: .95em;
+    margin-top: 4px;
 }
 
 .iw_address {
@@ -195,4 +199,28 @@
     text-align: center;
     color: gray;
     border-bottom: 1px solid #80808033;
+}
+
+span.like {
+    flex-grow: 1;
+    align-items: center;
+    display: flex;
+}
+
+i.like {
+    margin-left: 10px;
+    font-size: 23px;
+    float: right;
+}
+
+i.like:hover {
+    cursor: pointer;
+}
+
+i.like-disabled {
+    color: #bababa;
+}
+
+i.liked {
+    color: #d90020;
 }
