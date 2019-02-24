@@ -146,8 +146,11 @@ function ViewModel() {
         for (var i = 0; i < this.markers.length; i++) {
             var marker = this.markers[i];
 
-            if (marker.title.toLowerCase().includes(this.searchOption()
-                .toLowerCase())) {
+            let matchTitle = marker.title.toLowerCase().includes(this.searchOption()
+                .toLowerCase());
+            let matchCategory = marker.category.toLowerCase().includes(this.searchOption()
+                .toLowerCase());
+            if (matchTitle || matchCategory) {
                 marker.iconPath = imagesFolder + marker.iconName;
                 result.push(marker);
                 bounds.extend(marker.position);
