@@ -5,6 +5,8 @@ foursquareClientSecret = "3UZMRJ1XEB1WDHZROFUCCIGDJCFMWPVRG5J4FFDWVDNHEV4K";
 flickrAPI = "ab711a02ea13a53446a08c35408c34ce";
 flickrSecret = "01bcd06c373ac055";
 
+let imagesFolder = "img/";
+
 function ViewModel() {
     let self = this;
 
@@ -18,7 +20,7 @@ function ViewModel() {
     // Update the info window to show related info of the passed 'marker'
     this.updateInfoWindow = function (marker, infoWindow) {
         if (infoWindow.marker === marker) {
-            return;
+            return false;
         }
 
         infoWindow.marker = marker;
@@ -27,29 +29,26 @@ function ViewModel() {
                                 <h4 class="iw_title">${marker.title}</h4>
                             </div>
                             <span><img class="place-icon" src="img/${marker.iconName}"/></span>
-                            <span class="info-window-category">${marker.category}</span>
-                            `;
+                            <span class="info-window-category">${marker.category}</span>`;
 
-        let placeId = `${marker.position.lat()}, ${marker.position.lng()}`
-        const placeLiked = localStorage.getItem(placeId) === "true";
+        let latlang = `${marker.position.lat()}, ${marker.position.lng()}`
+        const placeLiked = localStorage.getItem(latlang) === "true";
         let self = this;
         if (placeLiked) {
-            basicContent += `<i id="favorite" class="fas fa-heart like liked"
-                   data-place-id="${placeId}"></i>`
+            basicContent += `<i id="favorite" class="fas fa-heart like liked"></i>`
         } else {
-            basicContent += `<i id="favorite" class="fas fa-heart like like-disabled"
-                   data-place-id="${placeId}"></i>`
+            basicContent += `<i id="favorite" class="fas fa-heart like like-disabled""></i>`
         }
 
         infoWindow.setContent(basicContent);
 
         $("#favorite").click(function() {
-            console.log(placeId);
-            if (localStorage.getItem(placeId) === "true") {
-                localStorage.removeItem(placeId);
+            console.log(latlang);
+            if (localStorage.getItem(latlang) === "true") {
+                localStorage.removeItem(latlang);
                 $('#favorite').removeClass('liked').addClass('like-disabled');
             } else {
-                localStorage.setItem(placeId, true);
+                localStorage.setItem(latlang, true);
                 $('#favorite').removeClass('like-disabled').addClass('liked');
             }
         });
@@ -58,21 +57,32 @@ function ViewModel() {
         infoWindow.addListener('closeclick', function () {
             infoWindow.marker = null;
         });
+
+        const center = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+        map.panTo(center);
+        return true;
     };
 
     // Animate the marker in-action and update the info view to points to the marker on the map
     this.animateAndUpdateInfoView = function () {
-        self.updateInfoWindow(this, self.infoWindow);
+        let updated = self.updateInfoWindow(this, self.infoWindow);
         setTimeout((function () {
             this.setAnimation(null);
         }).bind(this), 900);
 
         this.setAnimation(google.maps.Animation.BOUNCE);
 
-        self.showPlaceDetails(this.position, this.title);
+        if (updated) {
+            self.showPlaceDetails(this.position, this.title);
+        }
     };
 
-    this.initMap = function () {
+    // Set InfoWindow
+    this.infoWindow = new google.maps.InfoWindow({
+        maxWidth: 200,
+    });
+
+    this.initializeMap = function () {
         const mapElement = document.getElementById('map');
         var mapOptions = {
             center: {lat: 41.0098674, lng: 28.9649889},
@@ -84,10 +94,6 @@ function ViewModel() {
 
         const bounds = new google.maps.LatLngBounds();
 
-        // Set InfoWindow
-        this.infoWindow = new google.maps.InfoWindow({
-            maxWidth: 200,
-        });
         for (let i = 0; i < places.length; i++) {
             this.markerTitle = places[i].title;
             this.markerLat = places[i].lat;
@@ -116,24 +122,44 @@ function ViewModel() {
         // map.setCenter(bounds.getCenter());
     };
 
-    this.initMap();
+    this.initializeMap();
+
+
+    this.hideInfoWindow = function () {
+        if (this.infoWindow != null) {
+            this.infoWindow.close();
+            this.infoWindow.marker = null;
+        }
+    };
 
     // This block appends our locations to a list using data-bind
     // It also serves to make the filter work
-    this.placesFilter = ko.computed(function () {
+    this.filterPlaces = ko.computed(function () {
         if (this.hidePlaceDetails) {
             this.hidePlaceDetails();
         }
+
+        this.hideInfoWindow();
+
+        const bounds = new google.maps.LatLngBounds();
         var result = [];
         for (var i = 0; i < this.markers.length; i++) {
             var marker = this.markers[i];
+
             if (marker.title.toLowerCase().includes(this.searchOption()
                 .toLowerCase())) {
+                marker.iconPath = imagesFolder + marker.iconName;
                 result.push(marker);
+                bounds.extend(marker.position);
                 this.markers[i].setVisible(true);
             } else {
                 this.markers[i].setVisible(false);
             }
+        }
+
+        if (result.length > 0) {
+            map.fitBounds(bounds);
+            map.setCenter(bounds.getCenter());
         }
 
         return result;
@@ -295,7 +321,10 @@ function ViewModel() {
     this.closeNavbar = function() {
         if ($(".place-details")[0].offsetWidth > 0) {
             self.hidePlaceDetails();
+            self.hideInfoWindow();
+
             $(".close-nav")[0].className = "close-nav fas fa-chevron-left";
+
             return
         }
 
