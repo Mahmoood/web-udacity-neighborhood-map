@@ -1,6 +1,9 @@
-let map, foursquareClientID, foursquareClientSecret;
+let map, foursquareClientID, foursquareClientSecret, flickrAPI, flickrSecret;
 foursquareClientID = "2G4BOAVMDDTBVKZOU0WI0IBXSQOCMDTIOWZCKXS4XO1RAC0R";
 foursquareClientSecret = "3UZMRJ1XEB1WDHZROFUCCIGDJCFMWPVRG5J4FFDWVDNHEV4K";
+
+flickrAPI = "ab711a02ea13a53446a08c35408c34ce";
+flickrSecret = "01bcd06c373ac055";
 
 function ViewModel() {
     let self = this;
@@ -19,11 +22,6 @@ function ViewModel() {
         }
 
         infoWindow.marker = marker;
-
-        const foursquareSearchUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
-            marker.lat + ',' + marker.lng + '&client_id=' + foursquareClientID +
-            '&client_secret=' + foursquareClientSecret + '&query=' + marker.title +
-            '&v=20170708' + '&m=foursquare';
 
         let basicContent = `<div>
                                 <h4 class="iw_title">${marker.title}</h4>
@@ -45,35 +43,15 @@ function ViewModel() {
 
         infoWindow.setContent(basicContent);
 
-        $.getJSON(foursquareSearchUrl)
-            .done(function (json) {
-                const venue = json.response.venues[0];
-                let formattedAddress = venue.location['formattedAddress'].join(', ');
-
-                self.address =
-                    `<div>
-                    <h6 class="iw_address_title"> Address: </h6>
-                    <p class="iw_address">${formattedAddress}</p>
-                </div>`;
-
-                infoWindow.setContent(basicContent + self.address);
-
-                $("#favorite").click(function() {
-                    console.log(placeId);
-                    if (localStorage.getItem(placeId) === "true") {
-                        localStorage.removeItem(placeId);
-                        $('#favorite').removeClass('liked').addClass('like-disabled');
-                    } else {
-                        localStorage.setItem(placeId, true);
-                        $('#favorite').removeClass('like-disabled').addClass('liked');
-                    }
-                });
-
-            }).fail(function () {
-            // Send alert
-            alert(
-                "There was an issue loading the Foursquare API. Please refresh your page to try again."
-            );
+        $("#favorite").click(function() {
+            console.log(placeId);
+            if (localStorage.getItem(placeId) === "true") {
+                localStorage.removeItem(placeId);
+                $('#favorite').removeClass('liked').addClass('like-disabled');
+            } else {
+                localStorage.setItem(placeId, true);
+                $('#favorite').removeClass('like-disabled').addClass('liked');
+            }
         });
 
         infoWindow.open(map, marker);
@@ -91,7 +69,7 @@ function ViewModel() {
 
         this.setAnimation(google.maps.Animation.BOUNCE);
 
-        self.showPlaceDetails(this.position);
+        self.showPlaceDetails(this.position, this.title);
     };
 
     this.initMap = function () {
@@ -161,43 +139,151 @@ function ViewModel() {
         return result;
     }, this);
 
-    this.showPlaceDetails = function(position) {
+    this.showPlaceDetails = function(position, title) {
         document.getElementsByClassName("place-details")[0].style.width = "100%";
         $(".close-nav")[0].className = "close-nav fas fa-times";
         $(".place-details").empty()
 
-        // Render place details
-        var flickerSearchUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
-            "&api_key=f018661ad69c5d52b0f39f7b39da03bf&lat=" + position.lat() +
-            "&lon=" + position.lng() + "&radius=0.1&radius_units=km&format=json&nojsoncallback=1";
+        $(".place-details").prepend(`<div class="place-text-info">`);
+        $(".place-details").append(`<div class="place-photos">`);
 
-        console.log(position.lat() + "," + position.lng());
 
-        $.getJSON(flickerSearchUrl)
+        // Foresquare api to get more details about the place
+        const foursquareSearchUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
+            position.lat() + ',' + position.lng() + '&client_id=' + foursquareClientID +
+            '&client_secret=' + foursquareClientSecret + '&query=' + title +
+            '&v=20190223' + '&m=foursquare';
+        $.getJSON(foursquareSearchUrl)
             .done(function (json) {
 
-                if (json !== null || json.stat !== "ok") {
-                    let errorElement = `<p class="flicker-image-search-error"> An error occurred while getting images from Flicker!</p>`;
-                    $(".place-details").append(errorElement);
+                // Get venue details by venue-id
+                const foursquareVenueDetailsAPI = "https://api.foursquare.com/v2/venues/" + json.response.venues[0].id +
+                    '?&client_id=' + foursquareClientID +
+                    '&client_secret=' + foursquareClientSecret + '&query=' + title +
+                    '&v=20190223' + '&m=foursquare';
+                $.getJSON(foursquareVenueDetailsAPI)
+                    .done(function (json) {
+                        var response = json.response;
+                        if (response != null) {
+                            let venue = response.venue;
+                            if (venue != null) {
+
+                                let placeBasicInfo =
+                                    `<div class="place-basic-info">
+                                        <h6 class="place-title">${title}</h6>
+                                     </div>`;
+
+                                $(".place-text-info").prepend(placeBasicInfo);
+
+                                if (venue.description != null) {
+                                    $(".place-basic-info").append(`<h6 class="place-description">${venue.description}</h6>`);
+                                }
+
+                                if (venue.likes != null && venue.likes.count != null && venue.likes.count > 0) {
+                                    $(".place-basic-info").append(`<div class="place-likes">${venue.likes.count}
+                                        <i class="fas fa-thumbs-up"></i></div>`);
+                                }
+
+                                if (venue.rating != null) {
+                                    $(".place-basic-info").append(`<div class="place-rating">${venue.rating}
+                                        <i class="fas fa-star"></i></div>`);
+
+                                    if (venue.ratingColor != null) {
+                                        $(".fa-star").css('color', `#${venue.ratingColor}`);
+                                    }
+                                }
+
+                                let placeExtraInfo =
+                                    `<div class="place-extra-info">
+                                     </div>`;
+                                $(".place-text-info").append(placeExtraInfo);
+
+                                let formattedAddress = venue.location['formattedAddress'].join(', ');
+                                if (formattedAddress != null) {
+                                    $(".place-extra-info").prepend(`<div class="place-location">
+                                            <i class="fas fa-map-marked-alt"></i>
+                                            <span>${formattedAddress}</span>
+                                        </div>`);
+                                }
+
+                                if (venue.url != null) {
+                                    $(".place-extra-info").append(`<div class="place-url">
+                                        <i class="fas fa-globe-europe"></i>
+                                        <span> <a href="${venue.url}">${venue.url}</a></span>
+                                        </div>`);
+                                }
+
+                                if (venue.shortUrl != null) {
+                                    $(".place-extra-info").append(`<div class="place-external-url">
+                                        <i class="fab fa-foursquare"></i>
+                                        <span> <a href="${venue.shortUrl}">Foresquare</a></span>
+                                        </div>`);
+                                }
+
+                                if (venue.contact != null && venue.contact.formattedPhone != null) {
+                                    $(".place-extra-info").append(`<div class="place-contact">
+                                       <i class="fas fa-phone-volume"></i>
+                                        <span>${venue.contact.formattedPhone}</span>
+                                        </div>`);
+                                }
+
+                                if (venue.hours != null && venue.hours.status != null) {
+                                    $(".place-extra-info").append(`<div class="place-hours-status">
+                                      <i class="far fa-clock"></i>
+                                        <span>${venue.hours.status}</span>
+                                        </div>`);
+                                }
+
+                                $(".place-extra-info").append(`<div class="powered-by-foursquare">
+                                       <span>Powered by Foursquare</span>
+                                        </div>`);
+                            }
+                        }
+
+
+                    }).fail(function () {
+                        let errorElement = `<p class="place-details-foursquare-error"> An error occurred while getting place info from Foursquare!</p>`;
+                        $(".place-details").prepend(errorElement);
+                });
+
+            }).fail(function () {
+                let errorElement = `<p class="place-details-foursquare-error"> An error occurred while getting place info from Foursquare!</p>`;
+                $(".place-details").prepend(errorElement);
+        });
+
+        // Use flickr photos API to get photos for a place
+        var flickrSearchUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
+            "&api_key="+ flickrAPI + "&lat=" + position.lat() +
+            "&lon=" + position.lng() + "&radius=0.1&radius_units=km&format=json&nojsoncallback=1";
+
+        $.getJSON(flickrSearchUrl)
+            .done(function (json) {
+
+                if (json == null || json.stat !== "ok") {
+                    let errorElement = `<p class="flickr-image-search-error"> An error occurred while getting images from flickr!</p>`;
+                    $(".place-photos").append(errorElement);
                     return
                 }
 
                 if (json.photos.total < 1) {
-                    let errorElement = `<p class="flicker-no-images"> Can not find any image on Flicker related to this place!</p>`;
-                    $(".place-details").append(errorElement);
+                    let errorElement = `<p class="flickr-no-images"> Can not find any image on flickr related to this place!</p>`;
+                    $(".place-photos").append(errorElement);
                     return
                 }
 
+                $(".place-photos").append(`<div class="title">Photos</div>`);
+                $(".place-photos").append(`<div class="source">Powered by Flickr</div>`);
+
                 json.photos.photo.slice(0, 10).forEach(({farm, server, id, secret}) => {
                     var url = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
-                    let flickerImageElement = `<img class="place-image" src=${url}>`;
-                    $(".place-details").append(flickerImageElement);      // Append the new elements
+                    let flickrImageElement = `<img class="place-image" src=${url}>`;
+                    $(".place-photos").append(flickrImageElement);      // Append the new elements
                     console.log(url);
                 });
 
             }).fail(function () {
                 // Send alert
-                let errorElement = `<p class="flicker-image-search-error"> An error occurred while getting images from Flicker! Try again later.</p>`;
+                let errorElement = `<p class="flickr-image-search-error"> An error occurred while getting images from flickr! Try again later.</p>`;
                 $(".place-details").append(errorElement);
         });
     }

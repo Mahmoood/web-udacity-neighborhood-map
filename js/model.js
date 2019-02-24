@@ -37,7 +37,7 @@ let places = [
     {
         title: 'Grand Bazaar',
         category: 'Shopping',
-        lat:41.0106848,
+        lat: 41.0106848,
         lng: 28.9658794,
         icon: 'shop.png'
     },

@@ -17,13 +17,6 @@
     padding: 3px 5px 5px 5px;
 }
 
-.foursquare {
-    position: absolute;
-    bottom: 2px;
-    width: 60%;
-    right: 0;
-}
-
 .iw_title {
     font-size: 1.3em;
     line-height: 1.5em;
@@ -36,17 +29,6 @@
     vertical-align: super;
     font-weight: 800;
 
-}
-
-.iw_address_title {
-    margin-bottom: 2px;
-    font-size: .95em;
-    margin-top: 4px;
-}
-
-.iw_address {
-    margin-bottom: 0;
-    font-size: .9em;
 }
 
 .padding-zero {
@@ -192,7 +174,7 @@
 
 }
 
-.flicker-image-search-error, .flicker-no-images{
+.flickr-image-search-error, .flickr-no-images{
     margin-top: 20px;
     font-size: 16px;
     padding: 17px;
@@ -223,4 +205,130 @@ i.like-disabled {
 
 i.liked {
     color: #d90020;
+}
+
+.place-title {
+    font-size: 1.35em;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 2px;
+
+}
+
+.place-basic-info {
+    background: #397af2;
+    width: 100%;
+    padding: 1px 28px 28px;
+    display: inline-block;
+    box-sizing: border-box;
+    border-bottom: 1px solid #80808033;
+}
+
+.place-extra-info {
+    box-sizing: border-box;
+    border-bottom: 1px solid #80808033;
+    width: 100%;
+}
+
+.place-address {
+    margin-bottom: 0;
+    font-size: .95em;
+}
+
+.place-details-foursquare-error {
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 17px;
+    text-align: center;
+    color: #f83f6d;
+    border-bottom: 1px solid #80808033;
+}
+
+.place-text-info {
+    width: 100%;
+}
+
+.place-description {
+    color: #a3cfff;
+    margin: 1em 0 0;
+    font-size: 1em;
+}
+
+.place-likes, .place-rating {
+    margin-top: 0.9em;
+    font-size: 1.1em;
+    color: white;
+}
+
+.place-likes {
+    float: left;
+}
+
+.place-rating {
+    float: right;
+}
+
+.fa-thumbs-up {
+    font-size: 1.2em;
+    margin-left: 0.2em;
+    color: #cee8ff;
+}
+
+.fa-star {
+    color: #cbffe3;
+    filter: brightness(140%);
+}
+
+.place-location, .place-url, .place-external-url, .place-contact, .place-hours-status {
+    display: flex;
+    font-size: 1.05em;
+    margin: 1.5em 2em 1em;
+}
+
+.fa-map-marked-alt, .fa-globe-europe, .fa-foursquare, .fa-phone-volume, .fa-clock {
+    margin-right: 20px;
+    font-size: 1.2em;
+}
+
+.place-url a, .place-external-url a {
+    text-decoration: none;
+}
+
+.place-url a {
+    color: #4a7ed4;
+}
+
+.place-external-url a {
+    color: #f83f6d;
+}
+
+.place-contact span, .place-hours-status span {
+    color: #919191;
+}
+
+.place-photos {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.place-photos .title {
+    width: 90%;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.place-photos .source {
+    width: 90%;
+    color: #6e6e6e;
+    font-size: 12px;
+}
+
+.powered-by-foursquare {
+    text-align: right;
+    font-size: 0.9em;
+    color: #f94878;
+    margin: 10px 6px 2px 10px;
 }
