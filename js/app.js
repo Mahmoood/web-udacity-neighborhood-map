@@ -332,7 +332,14 @@ function ViewModel() {
         }
 
         document.getElementById("drawer").classList.remove("is-visible");
-    }
+    };
+
+    $(document).on('keyup',function(evt) {
+        if (evt.which === 27 || evt.key === "Escape") {
+            self.closeNavbar();
+        }
+    });
+
 }
 
 function gm_authFailure() {
