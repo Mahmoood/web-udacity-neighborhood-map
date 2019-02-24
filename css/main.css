@@ -13,10 +13,6 @@
     border-top: 1px solid rgba(255,255,255,1);
 }
 
-.location_list {
-    padding: 3px 5px 5px 5px;
-}
-
 .iw_title {
     font-size: 1.3em;
     line-height: 1.5em;
@@ -118,7 +114,7 @@
     vertical-align: middle;
 }
 
-.nav-item {
+.place-entry {
     height: 50px;
     list-style-type: none;
     padding-left: 15px;
@@ -126,14 +122,32 @@
     margin-top: auto;
     margin-bottom: auto;
     display: flex;
+    font-weight: 600;
+    font-size: 1.0em;
     align-items: center;
+    background: #0061ff0d;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+li:nth-child(even).place-entry {
+    background: rgba(65, 133, 244, 0.03);
+}
+
+.place-entry:hover {
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+li:nth-child(even).place-entry:hover {
+    cursor: pointer;
+    background-color: #ffffff;
 }
 
 .nav {
     padding: 0;
     margin: 0;
     overflow: auto;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 80px);
 }
 
 .mdl-navigation {
@@ -141,15 +155,6 @@
     overflow: visible;
     margin-top: 80px;
 }
-
-.nav-item {
-    border-bottom: 1px solid #e6e6e6;
-}
-
-.nav-item:hover {
-    background-color: #f3f3f3;
-}
-
 
 .place-details {
     width: 0;
@@ -331,4 +336,13 @@ i.liked {
     font-size: 0.9em;
     color: #f94878;
     margin: 10px 6px 2px 10px;
+}
+
+.gm-style-iw-c .gm-ui-hover-effect{
+    margin-right: 5px !important;
+    margin-top: 5px !important;
+}
+
+.place-entry .place-icon {
+    margin-bottom: 0;
 }
