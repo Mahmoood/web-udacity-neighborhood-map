@@ -30,7 +30,7 @@ function ViewModel() {
         infoWindow.marker = marker;
 
         let basicContent = `<div>
-                                <h4 class="iw_title">${marker.title}</h4>
+                                <h4 class="info-window-title">${marker.title}</h4>
                             </div>
                             <span><img class="place-icon" src="img/${marker.iconName}"/></span>
                             <span class="info-window-category">${marker.category}</span>`;
@@ -373,8 +373,8 @@ function ViewModel() {
 function gm_authFailure() {
     alert(
         'An Error occurred while loading the map. Please refresh the page and try again!'
-    );};
-
+    );
+}
 function applyViewModelBinding() {
     let viewModel = new ViewModel();
     ko.applyBindings(viewModel);

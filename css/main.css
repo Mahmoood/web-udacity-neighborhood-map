@@ -6,22 +6,7 @@ img {
     max-width: 100%;
 }
 
-.app_title {
-    padding: 15px 5px 10px 5px;
-}
-
-.sidebar_width {
-    min-width: 300px;
-}
-
-.sidebar_hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(255,255,255,1);
-}
-
-.iw_title {
+.info-window-title {
     font-size: 1.3em;
     line-height: 1.5em;
     margin-top: 4px;
@@ -32,15 +17,6 @@ img {
     font-size: 1em;
     vertical-align: super;
     font-weight: 800;
-
-}
-
-.padding-zero {
-    padding: 0 0 0 0;
-}
-
-.padding-sides-10 {
-    padding: 0 10px 0 10px;
 }
 
 .place-icon {
@@ -71,12 +47,10 @@ img {
     padding: 14px;
     border-width: 1px;
     border-radius: 4px;
-
     width: 80%;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0 rgba(0,0,0,0.02);
     display: inline-block;
     margin: 15px 20px;
-
 }
 
 .search:focus {
@@ -88,7 +62,6 @@ img {
     display: flex;
     justify-content: center;
     align-items: baseline;
-
     position: fixed;
     top: 0;
     left: 0;
@@ -162,7 +135,6 @@ li:nth-child(even).place-entry:hover {
     flex-direction: column;
     align-items: center;
     overflow: auto;
-
 }
 
 .place-image {
@@ -170,7 +142,6 @@ li:nth-child(even).place-entry:hover {
     margin-top: 20px;
     margin-bottom: 10px;
     border-radius: 14px;
-
 }
 
 .flickr-image-search-error, .flickr-no-images{
