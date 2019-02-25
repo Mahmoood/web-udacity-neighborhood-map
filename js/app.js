@@ -33,7 +33,6 @@ function ViewModel() {
 
         let latlang = `${marker.position.lat()}, ${marker.position.lng()}`
         const placeLiked = localStorage.getItem(latlang) === "true";
-        let self = this;
         if (placeLiked) {
             basicContent += `<i id="favorite" class="fas fa-heart like liked"></i>`
         } else {
