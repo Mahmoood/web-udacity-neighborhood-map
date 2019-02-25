@@ -43,14 +43,6 @@ img {
     padding: 0 10px 0 10px;
 }
 
-.map_error {
-    color: white;
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    text-align: center;
-}
-
 .place-icon {
     width: 20px;
     margin-right: 10px;
@@ -362,4 +354,8 @@ i.liked {
     .mdl-layout__drawer {
        width: 400px;
     }
+}
+
+#map {
+    min-height: 100vh;
 }

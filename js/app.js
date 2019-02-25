@@ -5,7 +5,7 @@ foursquareClientSecret = "3UZMRJ1XEB1WDHZROFUCCIGDJCFMWPVRG5J4FFDWVDNHEV4K";
 flickrAPI = "ab711a02ea13a53446a08c35408c34ce";
 flickrSecret = "01bcd06c373ac055";
 
-let imagesFolder = "img/";
+const imagesFolder = "img/";
 
 function isSmallScreen() {
     return screen.width < 700;
