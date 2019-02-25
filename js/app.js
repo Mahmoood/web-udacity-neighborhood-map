@@ -7,6 +7,10 @@ flickrSecret = "01bcd06c373ac055";
 
 let imagesFolder = "img/";
 
+function isSmallScreen() {
+    return screen.width < 700;
+}
+
 function ViewModel() {
     let self = this;
 
@@ -39,6 +43,8 @@ function ViewModel() {
             basicContent += `<i id="favorite" class="fas fa-heart like like-disabled""></i>`
         }
 
+        basicContent += `<div class="more-info">More Info</div>`
+
         infoWindow.setContent(basicContent);
 
         infoWindow.open(map, marker);
@@ -57,6 +63,15 @@ function ViewModel() {
             }
         });
 
+        $(".more-info").click(function () {
+            // $('.mdl-layout').MaterialLayout.toggleDraw
+            // $('.mdl-layout').MaterialLayout.toggleDrawer()
+            if (!document.getElementById("drawer").classList.contains("is-visible")) {
+                $( 'div[class^="mdl-layout__obfuscator"]' ).trigger( "click" );
+            }
+            document.getElementsByClassName("place-details")[0].style.width = "100%";
+        });
+
         const center = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
         map.panTo(center);
         return true;
@@ -64,14 +79,18 @@ function ViewModel() {
 
     // Animate the marker in-action and update the info view to points to the marker on the map
     this.animateAndUpdateInfoView = function () {
-        let updated = self.updateInfoWindow(this, self.infoWindow);
+        if (isSmallScreen()) {
+            self.closeNavbar();
+        }
+
+        let windowUpdated = self.updateInfoWindow(this, self.infoWindow);
         setTimeout((function () {
             this.setAnimation(null);
         }).bind(this), 900);
 
         this.setAnimation(google.maps.Animation.BOUNCE);
 
-        if (updated) {
+        if (windowUpdated) {
             self.showPlaceDetails(this.position, this.title);
         }
     };
@@ -85,7 +104,8 @@ function ViewModel() {
         const mapElement = document.getElementById('map');
         var mapOptions = {
             center: {lat: 41.0098674, lng: 28.9649889},
-            zoom: 10
+            zoom: 10,
+            mapTypeControl: false
         };
 
         // Initialize the map object
@@ -169,7 +189,11 @@ function ViewModel() {
 
     this.showPlaceDetails = function(position, title) {
         document.getElementsByClassName("place-details")[0].style.width = "100%";
-        $(".close-nav")[0].className = "close-nav fas fa-times";
+        if (isSmallScreen()) {
+            $(".close-nav")[0].className = "close-nav fas fa-chevron-left";
+        } else {
+            $(".close-nav")[0].className = "close-nav fas fa-times";
+        }
         $(".place-details").empty()
 
         $(".place-details").prepend(`<div class="place-text-info">`);
@@ -318,15 +342,20 @@ function ViewModel() {
 
     this.hidePlaceDetails = function() {
         document.getElementsByClassName("place-details")[0].style.width = "0px";
+
+        $(".close-nav")[0].className = "close-nav fas fa-chevron-left";
     };
 
     this.closeNavbar = function() {
         if ($(".place-details")[0].offsetWidth > 0) {
+            if (isSmallScreen()) {
+                self.hidePlaceDetails();
+                document.getElementById("drawer").classList.remove("is-visible");
+                return
+            }
+
             self.hidePlaceDetails();
             self.hideInfoWindow();
-
-            $(".close-nav")[0].className = "close-nav fas fa-chevron-left";
-
             return
         }
 
