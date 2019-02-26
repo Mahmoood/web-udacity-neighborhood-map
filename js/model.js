@@ -1,3 +1,4 @@
+// List of places that represets the model of the app
 let places = [
     {
         title: 'Beyazit Square',

@@ -37,10 +37,9 @@
   
   <script src="js/model.js" charset="utf-8"></script>
   <script src="js/app.js" charset="utf-8"> </script>
-  <script src="js/manipulation.js" charset="utf-8"> </script>
 
   <!--Google maps apis-->
-  <script async defer src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBRTschOElF6NRclmCZymKOoGb0jKlNtfU&callback=applyViewModelBinding">
+  <script async defer src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBRTschOElF6NRclmCZymKOoGb0jKlNtfU&callback=applyViewModelBinding&onerror="googleError()">
   </script>
 </head>
 
@@ -61,9 +60,9 @@
     <div id="drawer" class="mdl-layout__drawer">
       <!--Search item -->
       <div class="search-holder">
-        <input class="mdl-layout-title search" data-bind="textInput: searchOption, valueUpdate: 'afterkeydown'" placeholder="Search Locations ...">
+        <input class="mdl-layout-title search" data-bind="textInput: searchText, valueUpdate: 'afterkeydown'" placeholder="Search Locations ...">
         <span>
-          <i class="close-nav fas fa-chevron-left" data-bind="click: closeNavbar"></i>
+          <i class="close-nav fas fa-chevron-left" data-bind="click: closeNavigationDrawer"></i>
         </span>
       </div>
 
