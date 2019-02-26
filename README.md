@@ -44,3 +44,8 @@ You can press `Escape` on the keyboard to close the navigation drawer.
 You can click on the `Heart` icon inside the info window to add a place to your favorites.
 
 Favorites data saved in the **local storage**.
+
+####  Screenshots:
+
+![](screenshots/sample-1.png)
+![](screenshots/sample-2.png)
