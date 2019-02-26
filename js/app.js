@@ -6,7 +6,6 @@ const foursquareClientSecret = "3UZMRJ1XEB1WDHZROFUCCIGDJCFMWPVRG5J4FFDWVDNHEV4K
 
 // Keys related to Flickr API
 const flickrAPI = "ab711a02ea13a53446a08c35408c34ce";
-const flickrSecret = "01bcd06c373ac055";
 
 const imagesFolder = "img/";
 
