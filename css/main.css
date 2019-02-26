@@ -6,6 +6,12 @@ img {
     max-width: 100%;
 }
 
+/*Style of map element*/
+#map {
+    min-height: 100vh;
+}
+
+/*Style of info window*/
 .info-window-title {
     font-size: 1.3em;
     line-height: 1.5em;
@@ -25,12 +31,60 @@ img {
     margin-bottom: 15px;
 }
 
+/*Style of more info word inside the info window*/
+.more-info {
+    color: #4185f4;
+    font-weight: 500;
+}
+
+.more-info:hover {
+    cursor: pointer;
+}
+
+/*Style of close icon in info window to give it more margin*/
+.gm-style-iw-c .gm-ui-hover-effect{
+    margin-right: 5px !important;
+    margin-top: 5px !important;
+}
+
+/*Style of favorite (heart) icon that appears in info window*/
+span.like {
+    flex-grow: 1;
+    align-items: center;
+    display: flex;
+}
+
+i.like {
+    margin-left: 10px;
+    font-size: 23px;
+    float: right;
+}
+
+i.like:hover {
+    cursor: pointer;
+}
+
+i.like-disabled {
+    color: #bababa;
+}
+
+i.liked {
+    color: #d90020;
+}
+
+/*Style of navigation drawer*/
 .mdl-layout__drawer {
     width: 350px;
     max-width: 100vw;
     left: -250px;
     border-right: none;
     overflow: hidden;
+}
+
+@media only screen and (min-width: 1000px) {
+    .mdl-layout__drawer {
+        width: 400px;
+    }
 }
 
 .mdl-layout__drawer.is-visible {
@@ -41,6 +95,11 @@ img {
     background-color: #397af2;
 }
 
+.mdl-layout__obfuscator {
+    visibility: hidden !important;
+}
+
+/*Style of search input field*/
 .search {
     font-size: 1.1em;
     height: 50px;
@@ -68,10 +127,7 @@ img {
     width: 100%;
 }
 
-.mdl-layout__obfuscator {
-    visibility: hidden !important;
-}
-
+/*Style of close icon in navigation drawer*/
 .close-nav {
     margin: auto;
     background-color: transparent;
@@ -81,6 +137,7 @@ img {
     padding-right: 8px;
 }
 
+/*Style of item in list in navigation drawer*/
 .place-entry {
     height: 50px;
     list-style-type: none;
@@ -110,19 +167,26 @@ li:nth-child(even).place-entry:hover {
     background-color: #ffffff;
 }
 
-.nav {
-    padding: 0;
-    margin: 0;
-    overflow: auto;
-    height: calc(100vh - 80px);
+/*Style of place category icon in places list in navigation drawer*/
+.place-entry .place-icon {
+    margin-bottom: 0;
 }
 
+/*Style of the list of places in navigation drawer*/
 .mdl-navigation {
     padding: 0 !important;
     overflow: visible;
     margin-top: 80px;
 }
 
+.places-list {
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    height: calc(100vh - 80px);
+}
+
+/*Style of place's details that appears above the list in navigation drawer*/
 .place-details {
     width: 0;
     height: calc(100vh - 80px);
@@ -137,54 +201,12 @@ li:nth-child(even).place-entry:hover {
     overflow: auto;
 }
 
-.place-image {
-    width: 90%;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    border-radius: 14px;
+/*Style of text info holder of place details in navigation drawer*/
+.place-text-info {
+    width: 100%;
 }
 
-.flickr-image-search-error, .flickr-no-images{
-    margin-top: 20px;
-    font-size: 16px;
-    padding: 17px;
-    text-align: center;
-    color: gray;
-    border-bottom: 1px solid #80808033;
-}
-
-span.like {
-    flex-grow: 1;
-    align-items: center;
-    display: flex;
-}
-
-i.like {
-    margin-left: 10px;
-    font-size: 23px;
-    float: right;
-}
-
-i.like:hover {
-    cursor: pointer;
-}
-
-i.like-disabled {
-    color: #bababa;
-}
-
-i.liked {
-    color: #d90020;
-}
-
-.place-title {
-    font-size: 1.35em;
-    font-weight: 400;
-    color: white;
-    margin-bottom: 2px;
-
-}
-
+/*Style of place basic info such that apears on the top of details in navigation drawer*/
 .place-basic-info {
     background: #397af2;
     width: 100%;
@@ -194,72 +216,79 @@ i.liked {
     border-bottom: 1px solid #80808033;
 }
 
+/*Style of place title in place's details element'*/
+.place-title {
+    font-size: 1.35em;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 2px;
+
+}
+
+/*Style of extra info (contact, url, location ...) about details that apears under the basic info*/
 .place-extra-info {
     box-sizing: border-box;
     border-bottom: 1px solid #80808033;
     width: 100%;
 }
 
+/*Style of the address of the place in navigation drawer inside the extra info*/
 .place-address {
     margin-bottom: 0;
     font-size: .95em;
 }
 
-.place-details-foursquare-error {
-    margin-top: 20px;
-    font-size: 16px;
-    padding: 17px;
-    text-align: center;
-    color: #f83f6d;
-    border-bottom: 1px solid #80808033;
-}
-
-.place-text-info {
-    width: 100%;
-}
-
+/*Style of the description of place in navigation drawer*/
 .place-description {
     color: #a3cfff;
     margin: 1em 0 0;
     font-size: 1em;
 }
 
+/*Style of likes & rating elements in place details in navigation drawer*/
 .place-likes, .place-rating {
     margin-top: 0.9em;
     font-size: 1.1em;
     color: white;
 }
 
+/*Style of likes element (icon & text)  in place details in navigation drawer*/
 .place-likes {
     float: left;
 }
 
+/*Style of rating element (icon & text) in place details in navigation drawer*/
 .place-rating {
     float: right;
 }
 
+/*Style of likes(thumbs-up) icon in place details in navigation drawer*/
 .fa-thumbs-up {
     font-size: 1.2em;
     margin-left: 0.2em;
     color: #cee8ff;
 }
 
+/*Style of rating(stars) icon in place details in navigation drawer*/
 .fa-star {
     color: #cbffe3;
     filter: brightness(140%);
 }
 
+/*Style of entries of extra info in place details in navigation drawer */
 .place-location, .place-url, .place-external-url, .place-contact, .place-hours-status {
     display: flex;
     font-size: 1.05em;
     margin: 1.5em 2em 1em;
 }
 
+/*Style of awesome icon font used in navigation drawer such as globe, contact ...*/
 .fa-map-marked-alt, .fa-globe-europe, .fa-foursquare, .fa-phone-volume, .fa-clock {
     margin-right: 20px;
     font-size: 1.2em;
 }
 
+/*Style of links inside urls that appear in place details in navigation drawer*/
 .place-url a, .place-external-url a {
     text-decoration: none;
 }
@@ -272,10 +301,12 @@ i.liked {
     color: #f83f6d;
 }
 
+/*Style of place conact info in place details in navigation drawer*/
 .place-contact span, .place-hours-status span {
     color: #919191;
 }
 
+/*Style of place photos that appears under textual info in place details in navigation drawer*/
 .place-photos {
     align-items: center;
     display: flex;
@@ -296,6 +327,7 @@ i.liked {
     font-size: 12px;
 }
 
+/*Style of powered by Foursquare source*/
 .powered-by-foursquare {
     text-align: right;
     font-size: 0.9em;
@@ -303,30 +335,30 @@ i.liked {
     margin: 10px 6px 2px 10px;
 }
 
-.gm-style-iw-c .gm-ui-hover-effect{
-    margin-right: 5px !important;
-    margin-top: 5px !important;
+/*Style of the error cause by foursquare API*/
+.place-details-foursquare-error {
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 17px;
+    text-align: center;
+    color: #f83f6d;
+    border-bottom: 1px solid #80808033;
 }
 
-.place-entry .place-icon {
-    margin-bottom: 0;
+/*Style of place image inside place's details in navigation drawer'*/
+.place-image {
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 14px;
 }
 
-.more-info {
-    color: #4185f4;
-    font-weight: 500;
-}
-
-.more-info:hover {
-    cursor: pointer;
-}
-
-@media only screen and (min-width: 1000px) {
-    .mdl-layout__drawer {
-       width: 400px;
-    }
-}
-
-#map {
-    min-height: 100vh;
+/*Style of errors caused by fliker API*/
+.flickr-image-search-error, .flickr-no-images{
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 17px;
+    text-align: center;
+    color: gray;
+    border-bottom: 1px solid #80808033;
 }

@@ -69,7 +69,7 @@
 
       <!--Places list-->
       <nav class="mdl-navigation">
-        <ul class="nav flex-column" data-bind="foreach: filterPlaces">
+        <ul class="places-list flex-column" data-bind="foreach: filterPlaces">
             <li class="place-entry" data-bind="click: $parent.animateAndUpdateInfoView">
               <span><img class="place-icon" data-bind="attr:{src: iconPath}"/></span>
               <span data-bind="text: title"></span>

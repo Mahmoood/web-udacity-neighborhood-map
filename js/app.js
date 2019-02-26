@@ -200,7 +200,7 @@ function ViewModel() {
         $(".place-details").append(`<div class="place-photos">`);
 
 
-        // Foresquare api to get more details about the place
+        // Foursquare api to get more details about the place
         const foursquareSearchUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
             position.lat() + ',' + position.lng() + '&client_id=' + foursquareClientID +
             '&client_secret=' + foursquareClientSecret + '&query=' + title +
@@ -268,7 +268,7 @@ function ViewModel() {
                                 if (venue.shortUrl != null) {
                                     $(".place-extra-info").append(`<div class="place-external-url">
                                         <i class="fab fa-foursquare"></i>
-                                        <span> <a href="${venue.shortUrl}">Foresquare</a></span>
+                                        <span> <a href="${venue.shortUrl}">Foursquare</a></span>
                                         </div>`);
                                 }
 
