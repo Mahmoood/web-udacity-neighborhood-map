@@ -45,7 +45,7 @@ You can click on the `Heart` icon inside the info window to add a place to your 
 
 Favorites data saved in the **local storage**.
 
-####  Screenshots:
+##  Screenshots:
 
 ![](screenshots/sample-1.png)
 ![](screenshots/sample-2.png)
